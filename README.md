@@ -71,6 +71,7 @@ struct msg_t{
         ```
 
 ３. 客户ID为1要给ID2发送消息
+
     - 设置消息格式
         ```c
         struct msg_t msg;
