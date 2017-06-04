@@ -32,66 +32,66 @@ struct msg_t{
 ### 消息发送流程
 
 1. 客户ID为1端要登录服务端
-- QT实现一个TCPSocet，连接到服务端所在的Ip和端口号
+    - QT实现一个TCPSocet，连接到服务端所在的Ip和端口号
 
-- 格式化消息
-    ```c
-    struct msg_t msg;
-    msg.head[0] = 1;//代表login
-    msg.head[1] = 1;
-    msg.head[2] //暂时保留
-    msg.head[3] //暂时保留
-    msg.body：//登录密码(字符)
-    ```
+    - 格式化消息
+        ```c
+        struct msg_t msg;
+        msg.head[0] = 1;//代表login
+        msg.head[1] = 1;
+        msg.head[2] //暂时保留
+        msg.head[3] //暂时保留
+        msg.body：//登录密码(字符)
+        ```
 
-- 将msg通过TCPSOcket发送到服务端
+    - 将msg通过TCPSOcket发送到服务端
 
 2. 服务端收到来自客户端的登录消息
 
-- 判断客户端的登录账号，密码是否合法如果合法
+    - 判断客户端的登录账号，密码是否合法如果合法
 
-- 回复要登录的客户端格式化消息
-    ```c
-    struct msg_t msg;
-    msg.head[0] = 2 //系统消息(整数)
-    msg.head[1] //（整数）0无法识别的消息，1无效userid，2无效密码, 3userid已经登录,4其他
-    msg.head[2] //暂时保留
-    msg.head[3] //暂时保留
-    msg.body[1024] //空，暂时保留
-    ```
+    - 回复要登录的客户端格式化消息
+        ```c
+        struct msg_t msg;
+        msg.head[0] = 2 //系统消息(整数)
+        msg.head[1] //（整数）0无法识别的消息，1无效userid，2无效密码, 3userid已经登录,4其他
+        msg.head[2] //暂时保留
+        msg.head[3] //暂时保留
+        msg.body[1024] //空，暂时保留
+        ```
 
-- 如果客户端验证通过，一切合法。通过TCPSocket将消息群发送给cleint
+    - 如果客户端验证通过，一切合法。通过TCPSocket将消息群发送给cleint
 
-    ```c
-    head[0] = 1 //用户状态消息（整数）
-    head[1]     //暂时保留
-    head[2]     //暂时保留
-    head[3]     //暂时保留
-    body[0]     //ID号为0的用户在线状态（字符），（'0'离线），（'1'在线）
-    ```
+        ```c
+        head[0] = 1 //用户状态消息（整数）
+        head[1]     //暂时保留
+        head[2]     //暂时保留
+        head[3]     //暂时保留
+        body[0]     //ID号为0的用户在线状态（字符），（'0'离线），（'1'在线）
+        ```
 
-4. 客户ID为1要给ID2发送消息
-- 设置消息格式
-    ```c
-    struct msg_t msg;
-    msg.head[0] = 0 //send消息（整数）
-    msg.head[1]     //1消息源（源用户ID号）（整数）
-    msg.head[2]     //2消息目的（目的用户ID号）（整数）
-    head[3]         //暂时保留
-    body[1024]:"message body"
-    ```
+３. 客户ID为1要给ID2发送消息
+    - 设置消息格式
+        ```c
+        struct msg_t msg;
+        msg.head[0] = 0 //send消息（整数）
+        msg.head[1]     //1消息源（源用户ID号）（整数）
+        msg.head[2]     //2消息目的（目的用户ID号）（整数）
+        head[3]         //暂时保留
+        body[1024]:"message body"
+        ```
 
-- 客户端通过TCPsocket将msg发送到server
+    - 客户端通过TCPsocket将msg发送到server
 
-- server接收到客户ID为1的消息要把消息转发到ID2， 格式化消息
+    - server接收到客户ID为1的消息要把消息转发到ID2， 格式化消息
 
-    ```c
-    struct msg_t msg;
-    msg.head[0] = 0 //send消息（整数）
-    msg.head[1]     //1消息源（源用户ID号）（整数）
-    msg.head[2]     //2消息目的（目的用户ID号）（整数）
-    head[3]         //暂时保留
-    body[1024]:"message body"
-    ```
+        ```c
+        struct msg_t msg;
+        msg.head[0] = 0 //send消息（整数）
+        msg.head[1]     //1消息源（源用户ID号）（整数）
+        msg.head[2]     //2消息目的（目的用户ID号）（整数）
+        head[3]         //暂时保留
+        body[1024]:"message body"
+        ```
 
-- 服务端端通过TCPsocket将msg发送到ID2对应的客户端
+    - 服务端端通过TCPsocket将msg发送到ID2对应的客户端
